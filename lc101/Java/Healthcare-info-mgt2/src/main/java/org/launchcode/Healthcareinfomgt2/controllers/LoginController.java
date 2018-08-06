@@ -41,10 +41,18 @@ public class LoginController {
 
     }
 
-    @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String registerUser(Model model, @ModelAttribute  @Valid User user,
-                      Errors errors) {
+    @RequestMapping(value = "signup", method = RequestMethod.POST)
+    public String registerUser(@ModelAttribute @Valid User user,
+                      Errors errors, Model model) {
         System.out.println("Sign up invoked..");
+        if(user!=null){
+            System.out.println("User first name " + user.getFirstName());
+            System.out.println("User last name " + user.getLastName());
+            System.out.println("User insurance id " + user.getInsuranceId());
+        }else{
+            System.out.println("User found null..");
+        }
+
         if (errors.hasErrors()) {
             model.addAttribute("title", "User Signup");
             return "signup";

@@ -44,7 +44,7 @@ public class User {
     private String password;
 
     @NotNull
-    @Size(min=3, max=15, message = "Insurance Id must be atleast 3 characters and cannot exceed 15 characters")
+    @Size(min=3, max=15, message = "Insurance Id must be at least 3 characters and cannot exceed 15 characters")
     private String insuranceId;
 
 
