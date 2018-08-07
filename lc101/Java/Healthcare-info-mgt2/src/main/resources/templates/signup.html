@@ -40,14 +40,19 @@
         <span th:errors="*{password}" class="error"></span>
     </div>
     <div class="form-group">
-        <label th:for="password"> Retype Password</label>:
-        <input class="form-control" th:field="*{password}" />
-        <span th:errors="*{password}" class="error"></span>
-    </div>
-    <div class="form-group">
         <label th:for="insurance">Insurance Id</label>:
         <input class="form-control" th:field="*{insuranceId}" />
         <span th:errors="*{insuranceId}" class="error"></span>
+    </div>
+
+    <div class="form-group">
+        <label  th:for="userTypes">UserType</label>
+        <select name="userTypeId">
+            <option th:each="userType : ${userTypes}"
+                    th:text="${userType.type}"
+                    th:value="${userType.id}">
+            </option>
+        </select>
     </div>
 
     <input type="submit" value="Register User" /><br/>

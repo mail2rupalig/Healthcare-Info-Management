@@ -3,7 +3,7 @@ package org.launchcode.Healthcareinfomgt2.models;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -21,22 +21,22 @@ public class User {
     private int id;
 
     @NotNull
-    @Size(min=3, max=15, message = "First Name must be atleast 3 characters and cannot exceed 15 characters")
+    @Size(min=3, max=25, message = "First Name must be atleast 3 characters and cannot exceed 15 characters")
     private String firstName;
 
     @NotNull
-    @Size(min=3, max=15, message = "Last Name must be atleast 3 characters and cannot exceed 15 characters")
+    @Size(min=3, max=50, message = "Last Name must be atleast 3 characters and cannot exceed 15 characters")
     private String lastName;
 
     @NotNull
-    @Size(min=3, max=15, message = "Email must be atleast 3 characters and cannot exceed 15 characters")
+    @Size(min=3, message = "Email must be at least 3 characters and cannot exceed 15 characters")
     private String email;
 
     @NotNull
     private Integer age;
 
     @NotNull
-    @Size(min=3, max=15, message = "User Name must be at least 3 characters and cannot exceed 15 characters")
+    @Size(min=3, max=25, message = "User Name must be at least 3 characters and cannot exceed 15 characters")
     private String userName;
 
     @NotNull
@@ -46,6 +46,9 @@ public class User {
     @NotNull
     @Size(min=3, max=15, message = "Insurance Id must be at least 3 characters and cannot exceed 15 characters")
     private String insuranceId;
+
+    @ManyToOne
+    private UserType userType;
 
 
 
@@ -123,5 +126,13 @@ public class User {
 
     public void setInsuranceId(String insuranceId) {
         this.insuranceId = insuranceId;
+    }
+
+    public UserType getUserType() {
+        return userType;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 }
