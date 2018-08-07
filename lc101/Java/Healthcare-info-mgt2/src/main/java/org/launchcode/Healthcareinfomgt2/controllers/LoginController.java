@@ -5,6 +5,7 @@ import org.launchcode.Healthcareinfomgt2.models.data.UserDao;
 import org.launchcode.Healthcareinfomgt2.models.data.UserTypeDao;
 import org.launchcode.Healthcareinfomgt2.models.User;
 import org.launchcode.Healthcareinfomgt2.models.UserType;
+import org.launchcode.Healthcareinfomgt2.models.UserLogin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.Valid;
+import java.lang.Iterable;
 
 
 @Controller
@@ -26,9 +28,54 @@ public class LoginController {
     @Autowired
     private UserTypeDao userTypeDao;
 
+    // Index form
+    @RequestMapping (value="")
+    public String index(Model model){
+        System.out.println("test 1");
+        return "index";
+    }
+
     // Login form
     @RequestMapping(value="/login", method=RequestMethod.GET)
     public String login(Model model) {
+        model.addAttribute("title", "User Login");
+        model.addAttribute("user", new UserLogin());
+        return "login";
+    }
+
+    @RequestMapping(value = "login", method = RequestMethod.POST)
+    public String registerUser(@ModelAttribute @Valid UserLogin user,
+                               Errors errors, Model model) {
+        System.out.println("Login invoked..");
+
+        if (errors.hasErrors()) {
+            model.addAttribute("title", "User Login");
+            return "login";
+        }
+
+        Iterable<User> users = userDao.findAll();
+
+        if(users!=null){
+            for(User usr:users){
+//                System.out.println("Credentials - "+user.getUserName() + ":" + user.getPassword());
+//                System.out.println("DB - "+usr.getUserName() + ":" + usr.getPassword());
+//
+            if(usr.getUserName().equals(user.getUserName()) && usr.getPassword().equals(user.getPassword())){
+                System.out.println("usr name and pwd match..");
+                    if(usr.getUserType().getType().equals("Doctor")){
+                        return "redirect:/healthcare-info-mgt/doctor/landing";
+                    }else if(usr.getUserType().getType().equals("Patient")){
+                        return "redirect:/healthcare-info-mgt/patient/landing";
+                    }
+                }
+            }
+        }
+
+//        userDao.save(user);
+//        System.out.println("Login completed..");
+
+        model.addAttribute("loginError", "True");
+        model.addAttribute("user", user);
         return "login";
     }
 
@@ -47,13 +94,6 @@ public class LoginController {
     public String registerUser(@ModelAttribute @Valid User user,
                       Errors errors, @RequestParam int userTypeId, Model model) {
         System.out.println("Sign up invoked..");
-        if(user!=null){
-            System.out.println("User first name " + user.getFirstName());
-            System.out.println("User last name " + user.getLastName());
-            System.out.println("User insurance id " + user.getInsuranceId());
-        }else{
-            System.out.println("User found null..");
-        }
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "User Signup");
