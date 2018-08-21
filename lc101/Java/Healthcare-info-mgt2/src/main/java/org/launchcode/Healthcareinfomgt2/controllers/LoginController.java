@@ -6,6 +6,7 @@ import org.launchcode.Healthcareinfomgt2.models.data.UserTypeDao;
 import org.launchcode.Healthcareinfomgt2.models.User;
 import org.launchcode.Healthcareinfomgt2.models.UserType;
 import org.launchcode.Healthcareinfomgt2.models.UserLogin;
+import org.launchcode.Healthcareinfomgt2.service.EncodingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +28,9 @@ public class LoginController {
 
     @Autowired
     private UserTypeDao userTypeDao;
+
+    @Autowired
+    private EncodingService encodingService;
 
     // Index form
     @RequestMapping (value="")
@@ -60,7 +64,7 @@ public class LoginController {
 //                System.out.println("Credentials - "+user.getUserName() + ":" + user.getPassword());
 //                System.out.println("DB - "+usr.getUserName() + ":" + usr.getPassword());
 //
-            if(usr.getUserName().equals(user.getUserName()) && usr.getPassword().equals(user.getPassword())){
+            if(usr.getUserName().equals(user.getUserName()) && usr.getPassword().equals(encodingService.encode(user.getPassword()))){
                 System.out.println("usr name and pwd match..");
                     if(usr.getUserType().getType().equals("Doctor")){
                         return "redirect:/healthcare-info-mgt/doctor/landing";
@@ -102,6 +106,10 @@ public class LoginController {
 
         UserType usrType = userTypeDao.findOne(userTypeId);
         user.setUserType(usrType);
+
+        String encryptedPassword = encodingService.encode(user.getPassword());
+        user.setPassword(encryptedPassword);
+
         userDao.save(user);
         System.out.println("Sign up completed..");
 
