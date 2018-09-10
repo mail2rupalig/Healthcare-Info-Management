@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments"></div>
+<head>
+    <title>Add disease to Patient page</title>
+</head>
+<body>
+<h1> ABC HealthCare </h1>
+
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
+    <h2 class="my-0 mr-md-auto font-weight-normal">Patient's HealthChart</h2>
+    <nav class="my-2 my-md-1 mr-md-1">
+        <a  href="/healthcare-info-mgt/personal/doctor/landing">Back To Landing</a>
+        <a class="p-2 text-dark" href="/healthcare-info-mgt/logout">Logout</a>
+
+    </nav>
+</div>
+
+<form method="post" style="max-width:600px;" th:object="${disease}"><br/>
+
+    <div class="form-group">
+        <label  th:for="users">Patient</label>
+        <select name="userId">
+            <option th:each="user : ${users}"
+                    th:text="${user.firstName +' '+ user.lastName}"
+                    th:value="${user.id}">
+            </option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label  th:for="problemareas">Problem Area:</label>
+        <select name="problemAreaId">
+            <option th:each="parea : ${problemareas}"
+                    th:text="${parea.area}"
+                    th:value="${parea.id}">
+            </option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label th:for="description">Disease Name:</label>
+        <input class="form-control" th:field="*{name}" />
+        <span th:errors="*{name}" class="error"></span>
+    </div>
+
+    <div class="form-group">
+        <label th:for="description">Disease Description:</label>
+        <textarea class="form-control" rows = "6" cols = "120" th:field = "*{description}" >... </textarea>
+        <span th:errors="*{description}" class="error"></span>
+
+    </div>
+
+
+    <input type="submit" value="Add Disease for Patient" /><br/>
+
+
+</form>
+
+
+
+</body>
+</html>

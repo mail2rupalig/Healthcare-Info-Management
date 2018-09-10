@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 
 @Controller
-@RequestMapping("healthcare-info-mgt/patient")
+@RequestMapping("healthcare-info-mgt/personal/patient")
 public class PatientController {
 
     @Autowired
@@ -21,11 +21,12 @@ public class PatientController {
     private UserTypeDao userTypeDao;
 
 
-    // Sign Up form
+    // Patient landing form
     @RequestMapping(value="/landing", method=RequestMethod.GET)
-    public String signup(Model model){
+    public String index(Model model){
+        System.out.println("Patient landing page..");
         model.addAttribute("title", "Patient landing page");
-        return "patient/landing";
+        return "personal/patient/landing";
 
 
     }

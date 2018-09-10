@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestParam;
 import javax.validation.Valid;
 import java.lang.Iterable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 
 
 @Controller
@@ -47,45 +51,46 @@ public class LoginController {
         return "login";
     }
 
-    @RequestMapping(value = "login", method = RequestMethod.POST)
-    public String registerUser(@ModelAttribute @Valid UserLogin user,
-                               Errors errors, Model model) {
-        System.out.println("Login invoked..");
-
-        if (errors.hasErrors()) {
-            model.addAttribute("title", "User Login");
-            return "login";
-        }
-
-        Iterable<User> users = userDao.findAll();
-
-        if(users!=null){
-            for(User usr:users){
-//                System.out.println("Credentials - "+user.getUserName() + ":" + user.getPassword());
-//                System.out.println("DB - "+usr.getUserName() + ":" + usr.getPassword());
+//    @RequestMapping(value = "login", method = RequestMethod.POST)
+//    public String registerUser(@ModelAttribute @Valid UserLogin user,
+//                               Errors errors, Model model) {
+//        System.out.println("Login invoked..");
 //
-            if(usr.getUserName().equals(user.getUserName()) && usr.getPassword().equals(encodingService.encode(user.getPassword()))){
-                System.out.println("usr name and pwd match..");
-                    if(usr.getUserType().getType().equals("Doctor")){
-                        return "redirect:/healthcare-info-mgt/doctor/landing";
-                    }else if(usr.getUserType().getType().equals("Patient")){
-                        return "redirect:/healthcare-info-mgt/patient/landing";
-                    }
-                }
-            }
-        }
+//        if (errors.hasErrors()) {
+//            model.addAttribute("title", "User Login");
+//            return "login";
+//        }
+//
+//        Iterable<User> users = userDao.findAll();
+//
+//        if(users!=null){
+//            for(User usr:users){
+////                System.out.println("Credentials - "+user.getUserName() + ":" + user.getPassword());
+////                System.out.println("DB - "+usr.getUserName() + ":" + usr.getPassword());
+////
+//            if(usr.getUserName().equals(user.getUserName()) && usr.getPassword().equals(user.getPassword())){
+//                System.out.println("usr name and pwd match..");
+//                    if(usr.getUserType().getType().equals("Doctor")){
+//                        return "redirect:/healthcare-info-mgt/doctor/landing";
+//                    }else if(usr.getUserType().getType().equals("Patient")){
+//                        return "redirect:/healthcare-info-mgt/patient/landing";
+//                    }
+//                }
+//            }
+//        }
 
 //        userDao.save(user);
 //        System.out.println("Login completed..");
 
-        model.addAttribute("loginError", "True");
-        model.addAttribute("user", user);
-        return "login";
-    }
+//        model.addAttribute("loginError", "True");
+//        model.addAttribute("user", user);
+//        return "login";
+//    }
 
     // Sign Up form
     @RequestMapping(value="/signup", method=RequestMethod.GET)
     public String signup(Model model){
+        System.out.println("Sign up invoked first time..");
         model.addAttribute("title", "User Sign Up");
         model.addAttribute(new User());
         model.addAttribute("userTypes", userTypeDao.findAll());
@@ -101,15 +106,24 @@ public class LoginController {
 
         if (errors.hasErrors()) {
             model.addAttribute("title", "User Signup");
+            model.addAttribute("userTypes", userTypeDao.findAll());
             return "signup";
         }
 
         UserType usrType = userTypeDao.findOne(userTypeId);
         user.setUserType(usrType);
+        user.setEnabled(true);
 
-        String encryptedPassword = encodingService.encode(user.getPassword());
-        user.setPassword(encryptedPassword);
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(user.getPassword());
 
+//        System.out.println("hashedPassword.."+hashedPassword);
+
+//        String encryptedPassword = encodingService.encode(user.getPassword());
+
+//        user.setPassword(user.getPassword());
+
+        user.setPassword(hashedPassword);
         userDao.save(user);
         System.out.println("Sign up completed..");
 

@@ -1,10 +1,6 @@
 package org.launchcode.Healthcareinfomgt2.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -40,7 +36,7 @@ public class User {
     private String userName;
 
     @NotNull
-    @Size(min=3, max=15, message = "Password must be at least 3 characters and cannot exceed 15 characters")
+    @Size(min=3, max=60, message = "Password must be at least 3 characters and cannot exceed 60 characters")
     private String password;
 
     @NotNull
@@ -49,6 +45,12 @@ public class User {
 
     @ManyToOne
     private UserType userType;
+
+    @OneToMany
+    @JoinColumn(name = "patient_id")
+    private List<Disease> diseases;
+
+    private Boolean enabled;
 
 
 
@@ -134,5 +136,13 @@ public class User {
 
     public void setUserType(UserType userType) {
         this.userType = userType;
+    }
+
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
     }
 }

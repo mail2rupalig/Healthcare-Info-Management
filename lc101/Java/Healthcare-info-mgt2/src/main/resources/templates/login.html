@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<div th:replace="fragments"></div>
 <head>
     <title>Login page</title>
 </head>
 <body>
 <h1>Login page</h1>
+<nav >
+    <a  href="/healthcare-info-mgt">Home</a>
+</nav>
 <p th:if="${loginError}" class="error">Wrong user or password</p>
 
 <form method="post" style="max-width:600px;" th:object="${user}"><br/>
     <div class="form-group">
         <label th:for="username">Username</label>:
-        <input class="form-control" th:field="*{userName}" />
+        <input class="form-control" id="userName" th:field="*{userName}" />
         <span th:errors="*{userName}" class="error"></span>
     </div>
     <div class="form-group">
         <label th:for="password">Password</label>:
-        <input class="form-control" th:field="*{password}" />
+        <input class="form-control" type ="password" id="password"  th:field="*{password}" />
         <span th:errors="*{password}" class="error"></span>
     </div><br/>
     <input type="submit" value="Log in" /><br/>
